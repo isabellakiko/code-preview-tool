@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码预览工具 - Code Preview Tool</title>
+    <meta name="description" content="实时HTML/CSS/JS代码预览工具，支持多设备模拟和SVG预览">
+    <meta name="keywords" content="HTML预览,CSS预览,JavaScript测试,SVG预览,响应式测试,代码编辑器">
+    <meta name="author" content="Stephen Chan">
+    
+    <!-- 网站图标 -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <meta name="msapplication-TileImage" content="icon.svg">
+    
+    <!-- PWA配置 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a1a">
+    
+    <!-- 代码高亮样式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- 主样式 -->
+    <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div class="app-container">
+        <!-- 顶部工具栏 -->
+        <header class="toolbar">
+            <div class="toolbar-left">
+                <h1 class="app-title">
+                    <svg class="icon" width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="headerBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                            <linearGradient id="headerEditor" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#1a1a1a"/>
+                                <stop offset="100%" style="stop-color:#2d2d2d"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="16" cy="16" r="15" fill="url(#headerBg)"/>
+                        <rect x="4" y="6" width="24" height="20" rx="3" fill="url(#headerEditor)"/>
+                        <rect x="4" y="6" width="24" height="5" rx="3" fill="rgba(255,255,255,0.1)"/>
+                        <circle cx="7" cy="8.5" r="1" fill="#ff5f56"/>
+                        <circle cx="10" cy="8.5" r="1" fill="#ffbd2e"/>
+                        <circle cx="13" cy="8.5" r="1" fill="#27ca3f"/>
+                        <rect x="6" y="14" width="8" height="1.5" rx="0.5" fill="#e74c3c" opacity="0.9"/>
+                        <rect x="6" y="17" width="12" height="1.5" rx="0.5" fill="#3498db" opacity="0.8"/>
+                        <rect x="6" y="20" width="6" height="1.5" rx="0.5" fill="#f39c12" opacity="0.7"/>
+                        <rect x="20" y="14" width="6" height="6" rx="1" fill="rgba(46,204,113,0.3)" stroke="#2ecc71" stroke-width="0.5"/>
+                        <rect x="21" y="15" width="4" height="2" rx="0.5" fill="rgba(255,255,255,0.4)"/>
+                        <text x="16" y="24" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="4" text-anchor="middle">&lt;/&gt;</text>
+                    </svg>
+                    <span>代码预览工具</span>
+                </h1>
+            </div>
+            
+            <div class="toolbar-center">
+                <!-- 设备切换按钮 -->
+                <div class="device-selector">
+                    <button class="device-btn active" data-device="desktop" title="桌面端">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                        <span>桌面</span>
+                    </button>
+                    <button class="device-btn" data-device="tablet" title="平板">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="12" cy="18" r="1"/>
+                        </svg>
+                        <span>平板</span>
+                    </button>
+                    <button class="device-btn" data-device="mobile" title="手机">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="12" cy="18" r="1"/>
+                        </svg>
+                        <span>手机</span>
+                    </button>
+                    <button class="device-btn" data-device="custom" title="自定义尺寸">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                        <span>自定义</span>
+                    </button>
+                </div>
+                
+                <!-- 自定义尺寸输入 -->
+                <div class="custom-size-input" style="display: none;">
+                    <input type="number" id="customWidth" placeholder="宽度" value="1024">
+                    <span>×</span>
+                    <input type="number" id="customHeight" placeholder="高度" value="768">
+                    <button class="apply-btn">应用</button>
+                </div>
+            </div>
+            
+            <div class="toolbar-right">
+                <!-- 功能按钮 -->
+                <button class="tool-btn" id="runBtn" title="运行代码 (Ctrl+Enter)">
+                    <span>▶️ 运行</span>
+                </button>
+                <button class="tool-btn" id="clearBtn" title="清空代码">
+                    <span>🗑️ 清空</span>
+                </button>
+                <button class="tool-btn" id="fullscreenBtn" title="全屏预览">
+                    <span>🔍 全屏</span>
+                </button>
+                <button class="tool-btn" id="downloadBtn" title="下载HTML文件">
+                    <span>💾 下载</span>
+                </button>
+                <button class="tool-btn" id="templatesBtn" title="代码模板">
+                    <span>📋 模板</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 编辑器区域 -->
+            <div class="editor-panel">
+                <!-- 标签页 -->
+                <div class="editor-tabs">
+                    <button class="tab-btn active" data-tab="html">
+                        <span class="tab-icon">📄</span>
+                        HTML
+                    </button>
+                    <button class="tab-btn" data-tab="css">
+                        <span class="tab-icon">🎨</span>
+                        CSS
+                    </button>
+                    <button class="tab-btn" data-tab="js">
+                        <span class="tab-icon">⚡</span>
+                        JavaScript
+                    </button>
+                    <button class="tab-btn" data-tab="console">
+                        <span class="tab-icon">📊</span>
+                        控制台
+                    </button>
+                </div>
+                
+                <!-- 编辑器内容 -->
+                <div class="editor-content">
+                    <!-- HTML编辑器 -->
+                    <div class="editor-wrapper active" data-editor="html">
+                        <div class="editor-header">
+                            <span class="editor-label">HTML</span>
+                            <button class="format-btn" data-type="html">格式化</button>
+                        </div>
+                        <textarea class="code-editor" id="htmlEditor" placeholder="输入HTML代码..."><!DOCTYPE html>
+<html>
+<head>
+    <title>预览页面</title>
+</head>
+<body>
+    <h1>欢迎使用代码预览工具！</h1>
+    <p>在左侧编辑器中输入HTML、CSS和JavaScript代码</p>
+    <p>点击运行按钮或按 Ctrl+Enter 查看效果</p>
+    
+    <div class="demo-box">
+        <h2>功能特性</h2>
+        <ul>
+            <li>实时预览</li>
+            <li>多设备模拟</li>
+            <li>代码高亮</li>
+            <li>SVG支持</li>
+        </ul>
+    </div>
+</body>
+</html></textarea>
+                    </div>
+                    
+                    <!-- CSS编辑器 -->
+                    <div class="editor-wrapper" data-editor="css">
+                        <div class="editor-header">
+                            <span class="editor-label">CSS</span>
+                            <button class="format-btn" data-type="css">格式化</button>
+                        </div>
+                        <textarea class="code-editor" id="cssEditor" placeholder="输入CSS样式...">body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    color: #3498db;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.demo-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.demo-box h2 {
+    margin-top: 0;
+}
+
+.demo-box ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.demo-box li:before {
+    content: "✓ ";
+    color: #4ade80;
+    font-weight: bold;
+}</textarea>
+                    </div>
+                    
+                    <!-- JavaScript编辑器 -->
+                    <div class="editor-wrapper" data-editor="js">
+                        <div class="editor-header">
+                            <span class="editor-label">JavaScript</span>
+                            <button class="format-btn" data-type="js">格式化</button>
+                        </div>
+                        <textarea class="code-editor" id="jsEditor" placeholder="输入JavaScript代码...">// 示例JavaScript代码
+console.log('代码预览工具已加载！');
+
+// 添加交互效果
+document.addEventListener('DOMContentLoaded', function() {
+    const h1 = document.querySelector('h1');
+    if (h1) {
+        h1.style.cursor = 'pointer';
+        h1.addEventListener('click', function() {
+            this.style.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+            console.log('标题颜色已更改！');
+        });
+    }
+    
+    // 动画效果
+    const demoBox = document.querySelector('.demo-box');
+    if (demoBox) {
+        demoBox.style.transition = 'transform 0.3s';
+        demoBox.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+        demoBox.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    }
+});</textarea>
+                    </div>
+                    
+                    <!-- 控制台 -->
+                    <div class="editor-wrapper" data-editor="console">
+                        <div class="editor-header">
+                            <span class="editor-label">控制台输出</span>
+                            <button class="clear-console-btn">清空</button>
+                        </div>
+                        <div class="console-output" id="consoleOutput"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 调整器 -->
+            <div class="resizer" id="resizer"></div>
+            
+            <!-- 预览区域 -->
+            <div class="preview-panel">
+                <div class="preview-header">
+                    <span class="preview-label">预览</span>
+                    <span class="preview-size" id="previewSize">100% × 100%</span>
+                    <button class="refresh-btn" id="refreshBtn" title="刷新预览">
+                        🔄
+                    </button>
+                </div>
+                <div class="preview-container">
+                    <iframe class="preview-frame" id="previewFrame"></iframe>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 模板弹窗 -->
+        <div class="modal" id="templatesModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>选择模板</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="template-grid">
+                        <div class="template-card" data-template="basic">
+                            <div class="template-icon">📄</div>
+                            <div class="template-name">基础HTML</div>
+                        </div>
+                        <div class="template-card" data-template="bootstrap">
+                            <div class="template-icon">🅱️</div>
+                            <div class="template-name">Bootstrap</div>
+                        </div>
+                        <div class="template-card" data-template="canvas">
+                            <div class="template-icon">🎨</div>
+                            <div class="template-name">Canvas绘图</div>
+                        </div>
+                        <div class="template-card" data-template="svg">
+                            <div class="template-icon">🔷</div>
+                            <div class="template-name">SVG图形</div>
+                        </div>
+                        <div class="template-card" data-template="animation">
+                            <div class="template-icon">🎭</div>
+                            <div class="template-name">CSS动画</div>
+                        </div>
+                        <div class="template-card" data-template="form">
+                            <div class="template-icon">📋</div>
+                            <div class="template-name">表单示例</div>
+                        </div>
+                        <div class="template-card" data-template="grid">
+                            <div class="template-icon">🏗️</div>
+                            <div class="template-name">Grid布局</div>
+                        </div>
+                        <div class="template-card" data-template="flex">
+                            <div class="template-icon">📦</div>
+                            <div class="template-name">Flexbox</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 代码高亮库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    
+    <!-- 主脚本 -->
+    <script src="preview.js"></script>
+</body>
+</html>

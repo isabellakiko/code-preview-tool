@@ -1,0 +1,99 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 定义渐变和滤镜 -->
+  <defs>
+    <!-- 主背景渐变 -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#667eea;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 编辑器窗口渐变 -->
+    <linearGradient id="editorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d2d2d;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- HTML标签渐变 -->
+    <linearGradient id="htmlGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- CSS渐变 -->
+    <linearGradient id="cssGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- JS渐变 -->
+    <linearGradient id="jsGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e67e22;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 预览渐变 -->
+    <linearGradient id="previewGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2ecc71;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#27ae60;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 毛玻璃效果 -->
+    <filter id="glass" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.8 0"/>
+    </filter>
+    
+    <!-- 阴影效果 -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.3)"/>
+    </filter>
+  </defs>
+  
+  <!-- 外层发光背景 -->
+  <circle cx="32" cy="32" r="30" fill="url(#mainGradient)" opacity="0.1" filter="url(#glass)"/>
+  
+  <!-- 主容器 - 编辑器窗口 -->
+  <rect x="6" y="8" width="52" height="48" rx="8" ry="8" fill="url(#editorGradient)" filter="url(#shadow)"/>
+  
+  <!-- 窗口标题栏 -->
+  <rect x="6" y="8" width="52" height="12" rx="8" ry="8" fill="rgba(255,255,255,0.1)"/>
+  <rect x="6" y="14" width="52" height="6" fill="url(#editorGradient)"/>
+  
+  <!-- 窗口控制按钮 -->
+  <circle cx="12" cy="14" r="2" fill="#ff5f56"/>
+  <circle cx="18" cy="14" r="2" fill="#ffbd2e"/>
+  <circle cx="24" cy="14" r="2" fill="#27ca3f"/>
+  
+  <!-- 编辑器标签页 -->
+  <rect x="8" y="22" width="14" height="6" rx="2" ry="2" fill="url(#htmlGradient)" opacity="0.8"/>
+  <rect x="24" y="22" width="14" height="6" rx="2" ry="2" fill="url(#cssGradient)" opacity="0.6"/>
+  <rect x="40" y="22" width="14" height="6" rx="2" ry="2" fill="url(#jsGradient)" opacity="0.6"/>
+  
+  <!-- 代码行 - HTML -->
+  <rect x="10" y="32" width="16" height="2" rx="1" ry="1" fill="url(#htmlGradient)" opacity="0.8"/>
+  <rect x="10" y="36" width="12" height="2" rx="1" ry="1" fill="url(#htmlGradient)" opacity="0.6"/>
+  <rect x="10" y="40" width="18" height="2" rx="1" ry="1" fill="url(#htmlGradient)" opacity="0.4"/>
+  
+  <!-- 代码行 - CSS -->
+  <rect x="32" y="32" width="10" height="2" rx="1" ry="1" fill="url(#cssGradient)" opacity="0.8"/>
+  <rect x="32" y="36" width="14" height="2" rx="1" ry="1" fill="url(#cssGradient)" opacity="0.6"/>
+  <rect x="32" y="40" width="8" height="2" rx="1" ry="1" fill="url(#cssGradient)" opacity="0.4"/>
+  
+  <!-- 预览窗口指示器 -->
+  <rect x="45" y="32" width="10" height="8" rx="2" ry="2" fill="url(#previewGradient)" opacity="0.7"/>
+  <rect x="47" y="34" width="6" height="4" rx="1" ry="1" fill="rgba(255,255,255,0.3)"/>
+  
+  <!-- 代码符号装饰 -->
+  <text x="18" y="50" fill="url(#cssGradient)" font-family="monospace" font-size="8" opacity="0.6">&lt;/&gt;</text>
+  
+  <!-- 运行按钮 -->
+  <circle cx="50" cy="46" r="4" fill="url(#previewGradient)"/>
+  <polygon points="48,46 52,44 52,48" fill="white" opacity="0.9"/>
+  
+  <!-- 毛玻璃高光效果 -->
+  <rect x="6" y="8" width="52" height="24" rx="8" ry="8" fill="url(#mainGradient)" opacity="0.1" filter="url(#glass)"/>
+  
+  <!-- 整体高光 -->
+  <rect x="6" y="8" width="52" height="2" rx="8" ry="1" fill="rgba(255,255,255,0.3)"/>
+</svg>

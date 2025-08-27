@@ -1,0 +1,129 @@
+{
+  "name": "代码预览工具 - Code Preview Tool",
+  "short_name": "CodePreview",
+  "description": "实时HTML/CSS/JS代码预览工具，支持多设备模拟和SVG预览",
+  "version": "1.0.0",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#1a1a1a",
+  "background_color": "#121212",
+  "scope": "./",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon.svg", 
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  
+  "categories": [
+    "developer",
+    "productivity",
+    "education"
+  ],
+  
+  "shortcuts": [
+    {
+      "name": "新建HTML",
+      "short_name": "HTML",
+      "description": "创建新的HTML代码",
+      "url": "./index.html#html",
+      "icons": [
+        {
+          "src": "icon.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "加载模板",
+      "short_name": "模板",
+      "description": "选择代码模板",
+      "url": "./index.html#templates",
+      "icons": [
+        {
+          "src": "icon.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  
+  "screenshots": [
+    {
+      "src": "./screenshots/desktop-editor.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "桌面版代码编辑器界面"
+    },
+    {
+      "src": "./screenshots/mobile-preview.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "移动设备预览模式"
+    }
+  ],
+  
+  "prefer_related_applications": false,
+  
+  "edge_side_panel": {
+    "preferred_width": 600
+  },
+  
+  "protocol_handlers": [
+    {
+      "protocol": "web+codepreview",
+      "url": "./index.html?code=%s"
+    }
+  ],
+  
+  "file_handlers": [
+    {
+      "action": "./index.html",
+      "accept": {
+        "text/html": [".html", ".htm"],
+        "text/css": [".css"],
+        "text/javascript": [".js"],
+        "image/svg+xml": [".svg"]
+      }
+    }
+  ],
+  
+  "share_target": {
+    "action": "./index.html",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "code",
+          "accept": ["text/html", "text/css", "text/javascript"]
+        }
+      ]
+    }
+  }
+}
